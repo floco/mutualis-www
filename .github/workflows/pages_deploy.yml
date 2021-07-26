@@ -1,14 +1,19 @@
+# 
+# Copyright (C) 2020 ArtXIA <https://github.com/artxia>
+# <https://github.com/artxia/Action-NotionSite.git>
+#
+
 name: Deploy to Pages
 
 on:
 #  schedule:
-#    - cron: "*/59 * * * *"
+#    - cron: "*/20 * * * *"
   workflow_dispatch:
     inputs:
     
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     
     steps:
       - uses: actions/checkout@v2
@@ -17,13 +22,9 @@ jobs:
         run: |
           git submodule update --init --recursive
           git submodule update --remote
-          sudo apt install chromium-browser
-
-      - name: Set up Chromedriver
-        uses: nanasess/setup-chromedriver@master
-        with:
-          chromedriver-version: '77.0.3865.40'
-
+          sudo apt-get -y update
+          sudo apt-get -y install chromium-browser
+          sudo apt-get -y install google-chrome-stable
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -34,13 +35,11 @@ jobs:
           cat >  ${GITHUB_WORKSPACE}/loconotion/example/example_site.toml  << EOF
           ${{ secrets.SITE_CONFIG }}
           EOF
-
       - name: Install and Run
         run: |
           cd ${GITHUB_WORKSPACE}/loconotion
           pip install -r requirements.txt
           python loconotion example/example_site.toml > test.log 2>&1
-
       - name: Deploy to Pages
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
