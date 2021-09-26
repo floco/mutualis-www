@@ -1,2 +1,3 @@
-# To generate my website thanks to artxia/Action-NotionSite and Loconotion
+# To generate a test website thanks to artxia/Action-NotionSite and Loconotion
+
 
